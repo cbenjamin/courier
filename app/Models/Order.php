@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'subscription_id',
     'type',
     'status',
-    'items',
+    'pickup_link',
+    'pickup_time',
     'delivery_address',
     'delivery_city',
     'delivery_state',
     'delivery_zip',
-    'scheduled_at',
     'stripe_payment_intent_id',
     'amount_cents',
     'notes',
@@ -44,8 +44,7 @@ class Order extends Model
     protected function casts(): array
     {
         return [
-            'items' => 'array',
-            'scheduled_at' => 'datetime',
+            'pickup_time' => 'datetime',
             'amount_cents' => 'integer',
         ];
     }

@@ -8,12 +8,11 @@ class DashboardController extends Controller
 {
     public function index(): View
     {
-        $user = auth()->user()->load([
-            'profile',
-            'subscription',
-            'orders' => fn ($q) => $q->latest()->limit(5),
-        ]);
+        $user = auth()->user()->load(['profile', 'subscription']);
 
-        return view('dashboard', compact('user'));
+        $recentOrders = $user->orders()->latest()->limit(5)->get();
+        $totalOrders  = $user->orders()->count();
+
+        return view('dashboard', compact('user', 'recentOrders', 'totalOrders'));
     }
 }

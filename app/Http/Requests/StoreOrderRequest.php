@@ -16,14 +16,12 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'type' => ['required', 'in:adhoc,subscription'],
-            'items' => ['required', 'array', 'min:1'],
-            'items.*.name' => ['required', 'string', 'max:255'],
-            'items.*.quantity' => ['required', 'integer', 'min:1'],
+            'pickup_link' => ['required', 'url', 'max:2048'],
+            'pickup_time' => ['required', 'date', 'after:now'],
             'delivery_address' => ['required', 'string', 'max:255'],
             'delivery_city' => ['required', 'string', 'max:100'],
             'delivery_state' => ['required', 'string', 'size:2'],
             'delivery_zip' => ['required', 'string', 'max:10'],
-            'scheduled_at' => ['required', 'date', 'after:now'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ];
     }

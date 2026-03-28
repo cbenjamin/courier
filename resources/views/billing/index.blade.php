@@ -11,7 +11,7 @@
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <p class="font-semibold text-gray-900">Monthly Subscription</p>
-                    <p class="text-sm text-gray-500 mt-0.5">$69.00 / month</p>
+                    <p class="text-sm text-gray-500 mt-0.5">$79.00 / month</p>
                 </div>
                 <span class="text-xs font-medium px-2.5 py-1 rounded-full
                     @if($user->subscription->status === 'active') bg-green-100 text-green-700

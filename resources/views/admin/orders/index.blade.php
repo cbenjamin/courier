@@ -20,9 +20,8 @@
             <tr class="text-xs font-medium text-gray-500 uppercase tracking-wide border-b border-gray-100">
                 <th class="px-6 py-3 text-left">#</th>
                 <th class="px-6 py-3 text-left">Customer</th>
-                <th class="px-6 py-3 text-left">Items</th>
                 <th class="px-6 py-3 text-left">Type</th>
-                <th class="px-6 py-3 text-left">Scheduled</th>
+                <th class="px-6 py-3 text-left">Pickup Time</th>
                 <th class="px-6 py-3 text-left">Status</th>
             </tr>
         </thead>
@@ -35,9 +34,8 @@
                     <td class="px-6 py-3">
                         <a href="{{ route('admin.users.show', $order->user) }}" class="text-sm text-gray-800 hover:underline">{{ $order->user->name }}</a>
                     </td>
-                    <td class="px-6 py-3 text-sm text-gray-500">{{ count($order->items) }} item(s)</td>
                     <td class="px-6 py-3 text-xs text-gray-400 uppercase">{{ $order->type }}</td>
-                    <td class="px-6 py-3 text-sm text-gray-500">{{ $order->scheduled_at?->format('M j, g:i A') ?? '—' }}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">{{ $order->pickup_time?->format('M j, g:i A') ?? '—' }}</td>
                     <td class="px-6 py-3">
                         <span class="text-xs font-medium px-2.5 py-1 rounded-full
                             @if($order->status === 'delivered') bg-green-100 text-green-700
@@ -50,7 +48,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="px-6 py-10 text-center text-sm text-gray-400">No orders found.</td></tr>
+                <tr><td colspan="5" class="px-6 py-10 text-center text-sm text-gray-400">No orders found.</td></tr>
             @endforelse
         </tbody>
     </table>

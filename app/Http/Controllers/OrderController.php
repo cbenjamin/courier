@@ -39,7 +39,7 @@ class OrderController extends Controller
             $order = $user->orders()->create([
                 ...$data,
                 'subscription_id' => $subscription->id,
-                'status' => Order::STATUS_CONFIRMED,
+                'status'          => Order::STATUS_CONFIRMED,
             ]);
 
             $subscription->increment('orders_used');

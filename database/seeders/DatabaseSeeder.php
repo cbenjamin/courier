@@ -59,57 +59,46 @@ class DatabaseSeeder extends Seeder
         // Orders for Mary (subscription)
         foreach (range(1, 2) as $i) {
             Order::create([
-                'user_id' => $customers[0]->id,
+                'user_id'         => $customers[0]->id,
                 'subscription_id' => $subscription->id,
-                'type' => 'subscription',
-                'status' => $i === 1 ? Order::STATUS_DELIVERED : Order::STATUS_CONFIRMED,
-                'items' => [
-                    ['name' => 'Organic Whole Milk', 'quantity' => 2],
-                    ['name' => 'Sourdough Bread', 'quantity' => 1],
-                    ['name' => 'Baby Spinach', 'quantity' => 1],
-                ],
+                'type'            => 'subscription',
+                'status'          => $i === 1 ? Order::STATUS_DELIVERED : Order::STATUS_CONFIRMED,
+                'pickup_link'     => 'https://www.amazon.com/gp/buy/thankyou/handlers/display.html?orderID=114-seed-00' . $i,
+                'pickup_time'     => now()->subDays($i * 5),
                 'delivery_address' => $customers[0]->profile->address,
-                'delivery_city' => $customers[0]->profile->city,
-                'delivery_state' => 'AL',
-                'delivery_zip' => $customers[0]->profile->zip,
-                'scheduled_at' => now()->subDays($i * 5),
-                'notes' => 'Please leave at the back door.',
+                'delivery_city'   => $customers[0]->profile->city,
+                'delivery_state'  => 'AL',
+                'delivery_zip'    => $customers[0]->profile->zip,
+                'notes'           => 'Please leave at the back door.',
             ]);
         }
 
         // Ad-hoc orders for Bob
         Order::create([
-            'user_id' => $customers[1]->id,
-            'type' => 'adhoc',
-            'status' => Order::STATUS_PENDING,
-            'items' => [
-                ['name' => 'Atlantic Salmon', 'quantity' => 1],
-                ['name' => 'Asparagus', 'quantity' => 2],
-                ['name' => 'Lemons', 'quantity' => 3],
-            ],
-            'delivery_address' => $customers[1]->profile->address,
-            'delivery_city' => $customers[1]->profile->city,
-            'delivery_state' => 'AL',
-            'delivery_zip' => $customers[1]->profile->zip,
-            'scheduled_at' => now()->addDays(2),
-            'amount_cents' => 2500,
+            'user_id'                 => $customers[1]->id,
+            'type'                    => 'adhoc',
+            'status'                  => Order::STATUS_PENDING,
+            'pickup_link'             => 'https://www.amazon.com/gp/buy/thankyou/handlers/display.html?orderID=114-seed-003',
+            'pickup_time'             => now()->addDays(2),
+            'delivery_address'        => $customers[1]->profile->address,
+            'delivery_city'           => $customers[1]->profile->city,
+            'delivery_state'          => 'AL',
+            'delivery_zip'            => $customers[1]->profile->zip,
+            'amount_cents'            => 2500,
             'stripe_payment_intent_id' => 'pi_seed_' . uniqid(),
         ]);
 
         Order::create([
-            'user_id' => $customers[1]->id,
-            'type' => 'adhoc',
-            'status' => Order::STATUS_PICKED_UP,
-            'items' => [
-                ['name' => 'Chicken Thighs', 'quantity' => 1],
-                ['name' => 'Kale', 'quantity' => 1],
-            ],
+            'user_id'          => $customers[1]->id,
+            'type'             => 'adhoc',
+            'status'           => Order::STATUS_PICKED_UP,
+            'pickup_link'      => 'https://www.amazon.com/gp/buy/thankyou/handlers/display.html?orderID=114-seed-004',
+            'pickup_time'      => now()->subDay(),
             'delivery_address' => $customers[1]->profile->address,
-            'delivery_city' => $customers[1]->profile->city,
-            'delivery_state' => 'AL',
-            'delivery_zip' => $customers[1]->profile->zip,
-            'scheduled_at' => now()->subDay(),
-            'amount_cents' => 2500,
+            'delivery_city'    => $customers[1]->profile->city,
+            'delivery_state'   => 'AL',
+            'delivery_zip'     => $customers[1]->profile->zip,
+            'amount_cents'     => 2500,
         ]);
     }
 }

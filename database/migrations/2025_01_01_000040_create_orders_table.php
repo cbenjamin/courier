@@ -14,12 +14,12 @@ return new class extends Migration
             $table->foreignId('subscription_id')->nullable()->constrained()->nullOnDelete();
             $table->string('type')->default('adhoc'); // adhoc, subscription
             $table->string('status')->default('pending'); // pending, confirmed, picked_up, delivered, cancelled
-            $table->json('items');
+            $table->string('pickup_link');
+            $table->timestamp('pickup_time')->nullable();
             $table->string('delivery_address');
             $table->string('delivery_city')->nullable();
             $table->string('delivery_state', 2)->nullable()->default('AL');
             $table->string('delivery_zip', 10)->nullable();
-            $table->timestamp('scheduled_at')->nullable();
             $table->string('stripe_payment_intent_id')->nullable();
             $table->unsignedInteger('amount_cents')->nullable();
             $table->text('notes')->nullable();

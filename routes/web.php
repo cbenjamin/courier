@@ -56,6 +56,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/subscribe', [SubscriptionController::class, 'show'])->name('subscribe.show');
     Route::post('/subscribe', [SubscriptionController::class, 'store'])->name('subscribe.store');
+    Route::delete('/subscribe', [SubscriptionController::class, 'cancel'])->name('subscribe.cancel');
+    Route::get('/subscribe/complete', [SubscriptionController::class, 'complete'])->name('subscribe.complete');
 
     Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
     Route::post('/billing/cancel', [BillingController::class, 'cancel'])->name('billing.cancel');
@@ -79,4 +81,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/subscriptions', [Admin\SubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::get('/subscriptions/{subscription}', [Admin\SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::delete('/subscriptions/{subscription}', [Admin\SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
 });

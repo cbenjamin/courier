@@ -48,17 +48,26 @@
         </div>
     </div>
 
-    <!-- Order Details -->
+    <!-- Pickup Details -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-        <h2 class="font-semibold text-gray-800 mb-4">Items</h2>
-        <ul class="space-y-2">
-            @foreach($order->items as $item)
-                <li class="flex justify-between text-sm">
-                    <span class="text-gray-800">{{ $item['name'] }}</span>
-                    <span class="text-gray-400">× {{ $item['quantity'] }}</span>
-                </li>
-            @endforeach
-        </ul>
+        <h2 class="font-semibold text-gray-800 mb-4">Whole Foods Pickup</h2>
+        <dl class="space-y-3 text-sm">
+            <div>
+                <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Pickup Link</dt>
+                <dd>
+                    <a href="{{ $order->pickup_link }}" target="_blank" rel="noopener noreferrer"
+                        class="text-brand-600 hover:underline break-all">
+                        {{ $order->pickup_link }}
+                    </a>
+                </dd>
+            </div>
+            @if($order->pickup_time)
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Pickup Time</dt>
+                    <dd class="text-gray-800">{{ $order->pickup_time->format('M j, Y g:i A') }}</dd>
+                </div>
+            @endif
+        </dl>
 
         @if($order->notes)
             <div class="mt-4 pt-4 border-t border-gray-100">
@@ -71,12 +80,9 @@
     <!-- Delivery & Payment -->
     <div class="grid grid-cols-2 gap-4">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Delivery</p>
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Delivery Address</p>
             <p class="text-sm text-gray-800">{{ $order->delivery_address }}</p>
             <p class="text-sm text-gray-800">{{ $order->delivery_city }}, {{ $order->delivery_state }} {{ $order->delivery_zip }}</p>
-            @if($order->scheduled_at)
-                <p class="text-xs text-gray-500 mt-2">{{ $order->scheduled_at->format('M j, Y g:i A') }}</p>
-            @endif
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">

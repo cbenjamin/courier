@@ -21,9 +21,7 @@
                     <span class="ml-2 text-xs font-normal text-gray-400 uppercase tracking-wide">{{ $order->type }}</span>
                 </p>
                 <p class="text-xs text-gray-500 mt-0.5">
-                    {{ count($order->items) }} item{{ count($order->items) !== 1 ? 's' : '' }}
-                    &middot;
-                    {{ $order->scheduled_at?->format('M j, Y g:i A') ?? 'Unscheduled' }}
+                    Pickup {{ $order->pickup_time?->format('M j, Y g:i A') ?? 'time TBD' }}
                     @if($order->amount_cents)
                         &middot; {{ $order->amount_formatted }}
                     @endif

@@ -1,35 +1,29 @@
 @extends('layouts.app')
 
-@section('title', 'Complete Payment')
+@section('title', 'Complete Subscription')
 
 @section('content')
 <div class="max-w-lg mx-auto">
     <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900">Complete Your Order</h1>
-        <p class="text-gray-500 text-sm mt-1">Order #{{ $order->id }} &mdash; {{ $order->amount_formatted }}</p>
+        <h1 class="text-2xl font-semibold text-gray-900">Complete Your Subscription</h1>
+        <p class="text-gray-500 text-sm mt-1">Wiregrass Courier Monthly Plan &mdash; $79.00/month</p>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-        <h2 class="font-semibold text-gray-800 mb-3">Order Summary</h2>
-        <dl class="space-y-2 mb-4">
-            <div class="text-sm">
-                <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Pickup Link</dt>
-                <dd class="text-gray-700 break-all">{{ $order->pickup_link }}</dd>
-            </div>
-            @if($order->pickup_time)
-                <div class="text-sm">
-                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Pickup Time</dt>
-                    <dd class="text-gray-700">{{ $order->pickup_time->format('M j, Y g:i A') }}</dd>
-                </div>
-            @endif
-            <div class="text-sm">
-                <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Deliver To</dt>
-                <dd class="text-gray-700">{{ $order->delivery_address }}, {{ $order->delivery_city }}, {{ $order->delivery_state }} {{ $order->delivery_zip }}</dd>
-            </div>
-        </dl>
-        <div class="border-t border-gray-100 pt-3 flex justify-between text-sm font-semibold text-gray-800">
-            <span>Courier Fee</span>
-            <span>{{ $order->amount_formatted }}</span>
+        <h2 class="font-semibold text-gray-800 mb-3">What's included</h2>
+        <ul class="space-y-2">
+            @foreach(['Up to 4 Whole Foods courier runs per month', 'Save vs. $25/order ad-hoc rate', 'Priority scheduling', 'Cancel anytime'] as $feature)
+                <li class="flex items-center gap-3 text-sm text-gray-700">
+                    <svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    {{ $feature }}
+                </li>
+            @endforeach
+        </ul>
+        <div class="border-t border-gray-100 pt-3 mt-4 flex justify-between text-sm font-semibold text-gray-800">
+            <span>Monthly total</span>
+            <span>{{ $amount }}</span>
         </div>
     </div>
 
@@ -40,8 +34,9 @@
         <button id="submit-btn" @click="submit()"
             class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl transition-colors"
             :disabled="loading">
-            <span x-text="loading ? 'Processing...' : 'Pay ' + amount"></span>
+            <span x-text="loading ? 'Processing...' : 'Subscribe for ' + amount"></span>
         </button>
+        <p class="text-xs text-gray-400 text-center mt-3">Cancel anytime. No contracts.</p>
     </div>
 </div>
 
@@ -50,7 +45,7 @@
 function stripePayment(clientSecret, stripeKey) {
     return {
         loading: false,
-        amount: '{{ $order->amount_formatted }}',
+        amount: '{{ $amount }}/mo',
         stripe: null,
         elements: null,
 
@@ -68,7 +63,7 @@ function stripePayment(clientSecret, stripeKey) {
             const { error } = await this.stripe.confirmPayment({
                 elements: this.elements,
                 confirmParams: {
-                    return_url: '{{ route('orders.show', $order) }}',
+                    return_url: '{{ route('subscribe.complete', $subscription) }}',
                 },
             });
 

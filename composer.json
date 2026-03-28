@@ -12,7 +12,9 @@
         "php": "^8.3",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
-        "stripe/stripe-php": "*"
+        "stripe/stripe-php": "*",
+        "symfony/http-client": "*",
+        "symfony/mailgun-mailer": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

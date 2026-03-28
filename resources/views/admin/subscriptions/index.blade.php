@@ -19,9 +19,10 @@
         </thead>
         <tbody>
             @forelse($subscriptions as $sub)
-                <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onclick="window.location='{{ route('admin.subscriptions.show', $sub) }}'">
                     <td class="px-6 py-3">
-                        <a href="{{ route('admin.users.show', $sub->user) }}" class="text-sm font-medium text-gray-900 hover:text-brand-600">{{ $sub->user->name }}</a>
+                        <p class="text-sm font-medium text-gray-900">{{ $sub->user->name }}</p>
                         <p class="text-xs text-gray-400">{{ $sub->user->email }}</p>
                     </td>
                     <td class="px-6 py-3">

@@ -48,7 +48,7 @@
     <!-- Total Orders -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
         <p class="text-sm font-medium text-gray-500 mb-1">Total Orders</p>
-        <p class="text-xl font-semibold text-gray-900">{{ $user->orders->count() }}</p>
+        <p class="text-xl font-semibold text-gray-900">{{ $totalOrders }}</p>
         <a href="{{ route('orders.index') }}" class="text-sm text-brand-600 hover:underline mt-1 inline-block">
             View all orders →
         </a>
@@ -62,7 +62,7 @@
         <a href="{{ route('orders.index') }}" class="text-sm text-brand-600 hover:underline">View all</a>
     </div>
 
-    @forelse($user->orders as $order)
+    @forelse($recentOrders as $order)
         <a href="{{ route('orders.show', $order) }}" class="flex items-center justify-between px-6 py-4 border-b border-gray-50 hover:bg-gray-50 transition-colors last:border-0">
             <div>
                 <p class="text-sm font-medium text-gray-900">
@@ -70,8 +70,7 @@
                     <span class="ml-2 text-xs text-gray-400 uppercase tracking-wide">{{ $order->type }}</span>
                 </p>
                 <p class="text-xs text-gray-500 mt-0.5">
-                    {{ $order->scheduled_at?->format('M j, Y') ?? 'Unscheduled' }}
-                    &mdash; {{ count($order->items) }} item{{ count($order->items) !== 1 ? 's' : '' }}
+                    Pickup {{ $order->pickup_time?->format('M j, Y g:i A') ?? 'time TBD' }}
                 </p>
             </div>
             <span class="text-xs font-medium px-2.5 py-1 rounded-full

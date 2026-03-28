@@ -7,20 +7,14 @@
     <div class="mb-6">
         <a href="{{ route('orders.index') }}" class="text-sm text-gray-400 hover:text-gray-600">← Orders</a>
         <h1 class="text-2xl font-semibold text-gray-900 mt-2">New Order</h1>
-        <p class="text-gray-500 text-sm mt-1">We'll pick up your items from Whole Foods and deliver them to you.</p>
+        <p class="text-gray-500 text-sm mt-1">Place your Whole Foods order first, then share the pickup link with us and we'll handle the rest.</p>
     </div>
 
-    <form method="POST" action="{{ route('orders.store') }}" class="space-y-6"
-        x-data="{
-            orderType: '{{ $user->subscription?->isActive() && $user->subscription->hasCreditsRemaining() ? 'subscription' : 'adhoc' }}',
-            items: [{ name: '', quantity: 1 }],
-            addItem() { this.items.push({ name: '', quantity: 1 }) },
-            removeItem(i) { if (this.items.length > 1) this.items.splice(i, 1) }
-        }">
+    <form method="POST" action="{{ route('orders.store') }}" class="space-y-6">
         @csrf
 
         <!-- Order Type -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6" x-data="{ orderType: '{{ $user->subscription?->isActive() && $user->subscription->hasCreditsRemaining() ? 'subscription' : 'adhoc' }}' }">
             <h2 class="font-semibold text-gray-800 mb-4">Payment Method</h2>
             <div class="grid grid-cols-2 gap-3">
                 <label class="cursor-pointer">
@@ -57,48 +51,35 @@
             </div>
         </div>
 
-        <!-- Items -->
+        <!-- Pickup Details -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="font-semibold text-gray-800">Items from Whole Foods</h2>
-                <button type="button" @click="addItem()"
-                    class="text-sm text-brand-600 hover:text-brand-700 font-medium">
-                    + Add Item
-                </button>
+            <h2 class="font-semibold text-gray-800 mb-1">Whole Foods Pickup</h2>
+            <p class="text-xs text-gray-500 mb-4">Place your order at wholefoodsmarket.com, then paste the pickup confirmation link below.</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Order Pickup Link</label>
+                    <input type="url" name="pickup_link"
+                        value="{{ old('pickup_link') }}"
+                        placeholder="https://www.amazon.com/gp/buy/thankyou/..."
+                        required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 @error('pickup_link') border-red-400 @enderror">
+                    @error('pickup_link') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                    <p class="text-xs text-gray-400 mt-1">The confirmation or order-tracking link from your Whole Foods / Amazon order.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pickup Time</label>
+                    <input type="datetime-local" name="pickup_time"
+                        value="{{ old('pickup_time') }}"
+                        min="{{ now()->addHours(2)->format('Y-m-d\TH:i') }}"
+                        required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 @error('pickup_time') border-red-400 @enderror">
+                    @error('pickup_time') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                    <p class="text-xs text-gray-400 mt-1">When should we pick up your order from the store?</p>
+                </div>
             </div>
-
-            <div class="space-y-3">
-                <template x-for="(item, index) in items" :key="index">
-                    <div class="flex gap-3 items-start">
-                        <div class="flex-1">
-                            <input type="text" :name="'items[' + index + '][name]'" x-model="item.name"
-                                placeholder="Item name (e.g. Organic Apples)"
-                                required
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                        </div>
-                        <div class="w-20">
-                            <input type="number" :name="'items[' + index + '][quantity]'" x-model="item.quantity"
-                                min="1" max="99"
-                                required
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-brand-500">
-                        </div>
-                        <button type="button" @click="removeItem(index)"
-                            x-show="items.length > 1"
-                            class="mt-2 text-gray-300 hover:text-red-400 transition-colors">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                    </div>
-                </template>
-            </div>
-
-            @error('items')
-                <p class="text-red-600 text-xs mt-2">{{ $message }}</p>
-            @enderror
         </div>
 
-        <!-- Delivery Details -->
+        <!-- Delivery Address -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <h2 class="font-semibold text-gray-800 mb-4">Delivery Address</h2>
             <div class="space-y-4">
@@ -136,30 +117,18 @@
             </div>
         </div>
 
-        <!-- Schedule & Notes -->
+        <!-- Notes -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <h2 class="font-semibold text-gray-800 mb-4">Schedule</h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Preferred Delivery Date & Time</label>
-                    <input type="datetime-local" name="scheduled_at"
-                        value="{{ old('scheduled_at') }}"
-                        min="{{ now()->addHours(2)->format('Y-m-d\TH:i') }}"
-                        required
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 @error('scheduled_at') border-red-400 @enderror">
-                    @error('scheduled_at') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Special Instructions <span class="text-gray-400 font-normal">(optional)</span></label>
-                    <textarea name="notes" rows="3" placeholder="Any substitutions, access codes, or other notes..."
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">{{ old('notes') }}</textarea>
-                </div>
-            </div>
+            <h2 class="font-semibold text-gray-800 mb-4">Additional Notes <span class="text-gray-400 font-normal text-sm">(optional)</span></h2>
+            <textarea name="notes" rows="3"
+                placeholder="Gate codes, special delivery instructions, contact preferences..."
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">{{ old('notes') }}</textarea>
         </div>
 
         <button type="submit"
-            class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl transition-colors">
-            <span x-text="orderType === 'adhoc' ? 'Continue to Payment' : 'Place Order'"></span>
+            class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl transition-colors"
+            x-data x-text="document.querySelector('[name=type]:checked')?.value === 'subscription' ? 'Place Order' : 'Continue to Payment'">
+            Continue to Payment
         </button>
     </form>
 </div>

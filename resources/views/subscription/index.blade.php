@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="flex gap-3">
+            <div class="flex gap-3 mb-4">
                 <a href="{{ route('orders.create') }}"
                     class="flex-1 text-center bg-brand-600 hover:bg-brand-700 text-white font-medium px-4 py-2.5 rounded-lg text-sm transition-colors">
                     Place Order
@@ -45,13 +45,56 @@
                     Manage Billing
                 </a>
             </div>
+
+            @if($user->subscription->status !== 'cancelling')
+                <div x-data="{ open: false }" class="border-t border-gray-100 pt-4">
+                    <button @click="open = true"
+                        class="text-sm text-red-500 hover:text-red-700 transition-colors">
+                        Cancel subscription
+                    </button>
+
+                    <!-- Confirmation modal -->
+                    <div x-show="open" x-cloak
+                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+                        @keydown.escape.window="open = false">
+                        <div class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4" @click.stop>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Cancel subscription?</h3>
+                            <p class="text-sm text-gray-500 mb-6">
+                                You'll keep access to your remaining orders until
+                                <strong>{{ $user->subscription->period_end?->format('M j, Y') }}</strong>.
+                                After that your subscription will not renew.
+                            </p>
+                            <div class="flex gap-3">
+                                <button @click="open = false"
+                                    class="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg text-sm transition-colors">
+                                    Keep subscription
+                                </button>
+                                <form method="POST" action="{{ route('subscribe.cancel') }}" class="flex-1">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 rounded-lg text-sm transition-colors">
+                                        Yes, cancel
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="border-t border-gray-100 pt-4">
+                    <p class="text-sm text-orange-500">
+                        Your subscription is cancelled and will remain active until {{ $user->subscription->period_end?->format('M j, Y') }}.
+                    </p>
+                </div>
+            @endif
         </div>
     @else
         <!-- Upsell -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="bg-brand-700 px-8 py-6 text-white">
                 <p class="text-brand-300 text-sm font-medium uppercase tracking-wide mb-1">Monthly Plan</p>
-                <p class="text-4xl font-bold">$69<span class="text-xl font-normal text-brand-300">/mo</span></p>
+                <p class="text-4xl font-bold">$79<span class="text-xl font-normal text-brand-300">/mo</span></p>
                 <p class="text-brand-200 mt-1">Up to 4 orders per month</p>
             </div>
             <div class="p-8">
