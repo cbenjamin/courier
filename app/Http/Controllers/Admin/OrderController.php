@@ -35,7 +35,19 @@ class OrderController extends Controller
             'status' => ['required', 'in:'.implode(',', Order::VALID_STATUSES)],
         ]);
 
+        $previousStatus = $order->status;
         $order->update(['status' => $request->status]);
+
+        // Refund the delivery credit if a subscription order is being cancelled
+        if ($request->status === 'cancelled'
+            && $previousStatus !== 'cancelled'
+            && $order->type === 'subscription'
+            && $order->subscription
+            && $order->subscription->orders_used > 0
+        ) {
+            $order->subscription->decrement('orders_used');
+        }
+
         $order->user->notify(new OrderStatusUpdatedNotification($order));
 
         return redirect()->route('admin.orders.show', $order)->with('success', 'Order status updated.');

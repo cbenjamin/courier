@@ -5,7 +5,7 @@
 @section('content')
 <div class="grid grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-        <p class="text-sm font-medium text-gray-500">Pending Orders</p>
+        <p class="text-sm font-medium text-gray-500">Pending Deliveries</p>
         <p class="text-3xl font-bold text-yellow-600 mt-1">{{ $stats['pending_orders'] }}</p>
     </div>
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
@@ -24,7 +24,7 @@
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200">
     <div class="px-6 py-4 border-b border-gray-100">
-        <h2 class="font-semibold text-gray-900">Recent Orders</h2>
+        <h2 class="font-semibold text-gray-900">Recent Deliveries</h2>
     </div>
     <table class="w-full">
         <thead>
@@ -32,7 +32,7 @@
                 <th class="px-6 py-3 text-left">#</th>
                 <th class="px-6 py-3 text-left">Customer</th>
                 <th class="px-6 py-3 text-left">Type</th>
-                <th class="px-6 py-3 text-left">Scheduled</th>
+                <th class="px-6 py-3 text-left">Pickup Time</th>
                 <th class="px-6 py-3 text-left">Status</th>
             </tr>
         </thead>
@@ -46,7 +46,7 @@
                         <a href="{{ route('admin.users.show', $order->user) }}" class="text-sm text-gray-800 hover:underline">{{ $order->user->name }}</a>
                     </td>
                     <td class="px-6 py-3 text-sm text-gray-500 uppercase">{{ $order->type }}</td>
-                    <td class="px-6 py-3 text-sm text-gray-500">{{ $order->scheduled_at?->format('M j, g:i A') ?? '—' }}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">{{ $order->pickup_time?->format('M j, g:i A') ?? '—' }}</td>
                     <td class="px-6 py-3">
                         <span class="text-xs font-medium px-2.5 py-1 rounded-full
                             @if($order->status === 'delivered') bg-green-100 text-green-700
@@ -62,7 +62,7 @@
         </tbody>
     </table>
     <div class="px-6 py-4">
-        <a href="{{ route('admin.orders.index') }}" class="text-sm text-brand-600 hover:underline">View all orders →</a>
+        <a href="{{ route('admin.orders.index') }}" class="text-sm text-brand-600 hover:underline">View all deliveries →</a>
     </div>
 </div>
 @endsection

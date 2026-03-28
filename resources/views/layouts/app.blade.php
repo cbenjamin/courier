@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased" x-data>
-    <nav class="bg-white shadow-sm border-b border-gray-200">
+    <nav class="bg-white shadow-sm border-b border-gray-200" x-data="{ open: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 font-semibold text-brand-700 text-lg">
@@ -20,11 +20,13 @@
                     Wiregrass Courier
                 </a>
 
-                <div class="flex items-center gap-4">
+                <!-- Desktop nav -->
+                <div class="hidden sm:flex items-center gap-4">
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 hover:text-gray-900">Dashboard</a>
-                        <a href="{{ route('orders.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Orders</a>
+                        <a href="{{ route('orders.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Deliveries</a>
                         <a href="{{ route('profile.edit') }}" class="text-sm text-gray-600 hover:text-gray-900">Profile</a>
+                        <a href="{{ route('contact.show') }}" class="text-sm text-gray-600 hover:text-gray-900">Contact</a>
                         @if(auth()->user()->is_admin)
                             <a href="{{ route('admin.dashboard') }}" class="text-sm font-medium text-brand-700 hover:text-brand-900">Admin</a>
                         @endif
@@ -33,11 +35,44 @@
                             <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">Log Out</button>
                         </form>
                     @else
+                        <a href="{{ route('contact.show') }}" class="text-sm text-gray-600 hover:text-gray-900">Contact</a>
                         <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-gray-900">Log In</a>
                         <a href="{{ route('register') }}" class="text-sm font-medium bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700">Get Started</a>
                     @endauth
                 </div>
+
+                <!-- Mobile hamburger -->
+                <button @click="open = !open" class="sm:hidden p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors" aria-label="Toggle menu">
+                    <svg x-show="!open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                    <svg x-show="open" x-cloak class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div x-show="open" x-cloak @click.away="open = false"
+            class="sm:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-1">
+            @auth
+                <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
+                <a href="{{ route('orders.index') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Deliveries</a>
+                <a href="{{ route('profile.edit') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Profile</a>
+                <a href="{{ route('contact.show') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Contact</a>
+                @if(auth()->user()->is_admin)
+                    <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-brand-700 hover:bg-brand-50">Admin</a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-500 hover:bg-gray-50">Log Out</button>
+                </form>
+            @else
+                <a href="{{ route('contact.show') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Contact</a>
+                <a href="{{ route('login') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Log In</a>
+                <a href="{{ route('register') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-brand-700 hover:bg-brand-50">Get Started</a>
+            @endauth
         </div>
     </nav>
 

@@ -20,6 +20,7 @@
                 Wiregrass Courier
             </a>
             <div class="flex items-center gap-4">
+                <a href="{{ route('contact.show') }}" class="text-sm text-gray-600 hover:text-gray-900">Contact</a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="text-sm font-medium bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors">
                         Go to Dashboard
@@ -48,7 +49,7 @@
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ route('register') }}"
                     class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors">
-                    Place Your First Order
+                    Request Your First Delivery
                 </a>
                 <a href="#how-it-works"
                     class="border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold px-8 py-4 rounded-xl text-lg transition-colors">
@@ -84,7 +85,7 @@
                     </div>
                     <div class="text-brand-500 font-bold text-sm mb-2">Step 2</div>
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Place Your Order</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">List the items you need from Whole Foods and pick a delivery time that works for you.</p>
+                    <p class="text-gray-500 text-sm leading-relaxed">Give us your order pickup link and the pickup time.</p>
                 </div>
                 <div class="text-center">
                     <div class="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -141,16 +142,16 @@
                 <div class="bg-brand-700 rounded-2xl p-8 text-white relative overflow-hidden">
                     <div class="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">BEST VALUE</div>
                     <p class="text-sm font-semibold uppercase tracking-wide text-brand-300 mb-3">Monthly Plan</p>
-                    <p class="text-4xl font-bold mb-1">$69<span class="text-lg font-normal text-brand-300"> / mo</span></p>
-                    <p class="text-brand-300 text-sm mb-6">Up to 4 orders per month — that's $17.25 each.</p>
+                    <p class="text-4xl font-bold mb-1">$79<span class="text-lg font-normal text-brand-300"> / mo</span></p>
+                    <p class="text-brand-300 text-sm mb-6">Up to 4 deliveries per month — that's $19.75 each.</p>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-center gap-3 text-sm text-brand-100">
                             <svg class="w-5 h-5 text-brand-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            4 orders per month
+                            4 deliveries per month
                         </li>
                         <li class="flex items-center gap-3 text-sm text-brand-100">
                             <svg class="w-5 h-5 text-brand-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            Save over $30 vs. ad-hoc
+                            Save over $20 vs. ad-hoc
                         </li>
                         <li class="flex items-center gap-3 text-sm text-brand-100">
                             <svg class="w-5 h-5 text-brand-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -181,6 +182,7 @@
             </div>
             <p class="text-sm">&copy; {{ date('Y') }} Wiregrass Courier. Serving rural southern Alabama.</p>
             <div class="flex gap-4 text-sm">
+                <a href="{{ route('contact.show') }}" class="hover:text-white transition-colors">Contact</a>
                 <a href="{{ route('login') }}" class="hover:text-white transition-colors">Log In</a>
                 <a href="{{ route('register') }}" class="hover:text-white transition-colors">Register</a>
             </div>

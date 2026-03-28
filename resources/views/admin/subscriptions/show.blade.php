@@ -72,7 +72,7 @@
                     </dd>
                 </div>
                 <div>
-                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Orders Used</dt>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Deliveries Used</dt>
                     <dd class="flex items-center gap-2">
                         <span class="font-medium text-gray-800">{{ $subscription->orders_used }} / 4</span>
                         <div class="w-20 bg-gray-200 rounded-full h-1.5">
@@ -100,13 +100,13 @@
         <!-- Orders under this subscription -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-100">
-                <h2 class="font-semibold text-gray-900">Orders on this subscription</h2>
+                <h2 class="font-semibold text-gray-900">Deliveries on this subscription</h2>
             </div>
             @forelse($subscription->orders as $order)
                 <a href="{{ route('admin.orders.show', $order) }}"
                     class="flex items-center justify-between px-6 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors last:border-0">
                     <div>
-                        <p class="text-sm font-medium text-gray-800">Order #{{ $order->id }}</p>
+                        <p class="text-sm font-medium text-gray-800">Delivery #{{ $order->id }}</p>
                         <p class="text-xs text-gray-400 mt-0.5">Pickup {{ $order->pickup_time?->format('M j, Y g:i A') ?? 'TBD' }}</p>
                     </div>
                     <span class="text-xs font-medium px-2.5 py-1 rounded-full
@@ -119,7 +119,7 @@
                     </span>
                 </a>
             @empty
-                <p class="px-6 py-8 text-sm text-center text-gray-400">No orders placed on this subscription.</p>
+                <p class="px-6 py-8 text-sm text-center text-gray-400">No deliveries placed on this subscription.</p>
             @endforelse
         </div>
 

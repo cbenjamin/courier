@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'Order #' . $order->id)
+@section('title', 'Delivery #' . $order->id)
 
 @section('content')
 <div class="mb-6">
-    <a href="{{ route('admin.orders.index') }}" class="text-sm text-gray-400 hover:text-gray-600">← Orders</a>
+    <a href="{{ route('admin.orders.index') }}" class="text-sm text-gray-400 hover:text-gray-600">← Deliveries</a>
 </div>
 
 <div class="grid grid-cols-3 gap-6">

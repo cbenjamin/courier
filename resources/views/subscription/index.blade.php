@@ -26,7 +26,7 @@
 
             <div class="bg-gray-50 rounded-xl p-4 mb-6">
                 <div class="flex justify-between items-center mb-2">
-                    <p class="text-sm font-medium text-gray-700">Orders used this month</p>
+                    <p class="text-sm font-medium text-gray-700">Deliveries used this month</p>
                     <p class="text-sm font-semibold text-gray-900">{{ $user->subscription->orders_used }} / 4</p>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
@@ -38,7 +38,7 @@
             <div class="flex gap-3 mb-4">
                 <a href="{{ route('orders.create') }}"
                     class="flex-1 text-center bg-brand-600 hover:bg-brand-700 text-white font-medium px-4 py-2.5 rounded-lg text-sm transition-colors">
-                    Place Order
+                    Request Delivery
                 </a>
                 <a href="{{ route('billing.index') }}"
                     class="flex-1 text-center border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium px-4 py-2.5 rounded-lg text-sm transition-colors">
@@ -99,7 +99,7 @@
             </div>
             <div class="p-8">
                 <ul class="space-y-3 mb-8">
-                    @foreach(['Up to 4 Whole Foods courier runs per month', 'Save vs. $25/order ad-hoc rate', 'Priority scheduling', 'Cancel anytime'] as $feature)
+                    @foreach(['Up to 4 Whole Foods courier deliveries per month', 'Save vs. $25/delivery ad-hoc rate', 'Priority scheduling', 'Cancel anytime'] as $feature)
                         <li class="flex items-center gap-3 text-sm text-gray-700">
                             <svg class="w-5 h-5 text-brand-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
