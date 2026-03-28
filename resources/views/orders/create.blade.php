@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'New Order')
+@section('title', 'Request Delivery')
 
 @section('content')
 <div class="max-w-2xl mx-auto">
     <div class="mb-6">
-        <a href="{{ route('orders.index') }}" class="text-sm text-gray-400 hover:text-gray-600">← Orders</a>
-        <h1 class="text-2xl font-semibold text-gray-900 mt-2">New Order</h1>
+        <a href="{{ route('orders.index') }}" class="text-sm text-gray-400 hover:text-gray-600">← Deliveries</a>
+        <h1 class="text-2xl font-semibold text-gray-900 mt-2">Request a Delivery</h1>
         <p class="text-gray-500 text-sm mt-1">Place your Whole Foods order first, then share the pickup link with us and we'll handle the rest.</p>
     </div>
 

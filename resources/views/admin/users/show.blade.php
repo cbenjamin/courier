@@ -41,10 +41,10 @@
             @endif
         </div>
 
-        <!-- Recent Orders -->
+        <!-- Deliveries -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-100">
-                <h3 class="font-semibold text-gray-900">Orders</h3>
+                <h3 class="font-semibold text-gray-900">Deliveries</h3>
             </div>
             @forelse($user->orders as $order)
                 <a href="{{ route('admin.orders.show', $order) }}"
@@ -53,7 +53,7 @@
                         <p class="text-sm font-medium text-gray-900">#{{ $order->id }}
                             <span class="text-xs font-normal text-gray-400 uppercase ml-1">{{ $order->type }}</span>
                         </p>
-                        <p class="text-xs text-gray-500">{{ $order->scheduled_at?->format('M j, Y') }}</p>
+                        <p class="text-xs text-gray-500">Pickup {{ $order->pickup_time?->format('M j, Y') ?? 'TBD' }}</p>
                     </div>
                     <span class="text-xs font-medium px-2 py-0.5 rounded-full
                         @if($order->status === 'delivered') bg-green-100 text-green-700
@@ -65,7 +65,7 @@
                     </span>
                 </a>
             @empty
-                <p class="px-6 py-4 text-sm text-gray-400">No orders yet.</p>
+                <p class="px-6 py-4 text-sm text-gray-400">No deliveries yet.</p>
             @endforelse
         </div>
     </div>
@@ -81,7 +81,7 @@
                         <dd class="font-medium text-gray-900">{{ ucfirst(str_replace('_', ' ', $user->subscription->status)) }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Orders used</dt>
+                        <dt class="text-gray-500">Deliveries used</dt>
                         <dd class="font-medium text-gray-900">{{ $user->subscription->orders_used }} / 4</dd>
                     </div>
                     <div class="flex justify-between">

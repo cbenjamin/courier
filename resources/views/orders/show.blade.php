@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Order #' . $order->id)
+@section('title', 'Delivery #' . $order->id)
 
 @section('content')
 <div class="max-w-2xl mx-auto">
     <div class="mb-6">
-        <a href="{{ route('orders.index') }}" class="text-sm text-gray-400 hover:text-gray-600">← Orders</a>
+        <a href="{{ route('orders.index') }}" class="text-sm text-gray-400 hover:text-gray-600">← Deliveries</a>
         <div class="flex items-center justify-between mt-2">
-            <h1 class="text-2xl font-semibold text-gray-900">Order #{{ $order->id }}</h1>
+            <h1 class="text-2xl font-semibold text-gray-900">Delivery #{{ $order->id }}</h1>
             <span class="text-sm font-medium px-3 py-1 rounded-full
                 @if($order->status === 'delivered') bg-green-100 text-green-700
                 @elseif($order->status === 'confirmed') bg-blue-100 text-blue-700

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Orders')
+@section('title', 'Deliveries')
 
 @section('content')
 <!-- Filters -->

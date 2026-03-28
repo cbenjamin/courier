@@ -5,8 +5,8 @@
 @section('content')
 <div class="max-w-lg mx-auto">
     <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900">Complete Your Order</h1>
-        <p class="text-gray-500 text-sm mt-1">Order #{{ $order->id }} &mdash; {{ $order->amount_formatted }}</p>
+        <h1 class="text-2xl font-semibold text-gray-900">Complete Your Delivery Request</h1>
+        <p class="text-gray-500 text-sm mt-1">Delivery #{{ $order->id }} &mdash; {{ $order->amount_formatted }}</p>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
