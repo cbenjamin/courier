@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
+use App\Models\BlackoutDate;
 use App\Models\Order;
+use App\Models\Setting;
 use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -22,14 +24,22 @@ class OrderController extends Controller
     public function create(): View
     {
         $user = auth()->user()->load('profile', 'subscription');
+        $adhocPrice = Setting::get('adhoc_price_cents', 2500);
+        $blackoutDates = BlackoutDate::orderBy('date')->pluck('date')->map->toDateString();
 
-        return view('orders.create', compact('user'));
+        return view('orders.create', compact('user', 'adhocPrice', 'blackoutDates'));
     }
 
     public function store(StoreOrderRequest $request): mixed
     {
         $user = auth()->user()->load('subscription');
         $data = $request->validated();
+
+        // Block blackout dates
+        $pickupDate = \Carbon\Carbon::parse($data['pickup_time'])->toDateString();
+        if (BlackoutDate::whereDate('date', $pickupDate)->exists()) {
+            return back()->withErrors(['pickup_time' => 'Sorry, deliveries are not available on this date.'])->withInput();
+        }
 
         if ($data['type'] === Order::TYPE_SUBSCRIPTION) {
             $subscription = $user->subscription;
@@ -51,7 +61,7 @@ class OrderController extends Controller
         $order = $user->orders()->create([
             ...$data,
             'status' => Order::STATUS_PENDING,
-            'amount_cents' => config('courier.adhoc_price_cents', 2500),
+            'amount_cents' => Setting::get('adhoc_price_cents', 2500),
         ]);
 
         if (! $user->stripe_customer_id) {

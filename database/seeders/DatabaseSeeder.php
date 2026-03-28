@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Order;
 use App\Models\Profile;
+use App\Models\Setting;
 use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -13,6 +14,11 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Default settings
+        Setting::set('adhoc_price_cents', 2500);
+        Setting::set('subscription_price_cents', 7900);
+        Setting::set('contact_email', 'chris@chrisbenjamin.co');
+
         // Admin user
         $admin = User::create([
             'name' => 'Admin User',

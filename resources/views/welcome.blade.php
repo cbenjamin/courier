@@ -112,7 +112,7 @@
                 <!-- Ad-hoc -->
                 <div class="bg-white rounded-2xl border border-gray-200 p-8">
                     <p class="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">One-Time</p>
-                    <p class="text-4xl font-bold text-gray-900 mb-1">$25<span class="text-lg font-normal text-gray-400"> / order</span></p>
+                    <p class="text-4xl font-bold text-gray-900 mb-1">${{ number_format($adhocPrice, 0) }}<span class="text-lg font-normal text-gray-400"> / order</span></p>
                     <p class="text-gray-500 text-sm mb-6">Pay only when you need us.</p>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-center gap-3 text-sm text-gray-600">
@@ -142,8 +142,8 @@
                 <div class="bg-brand-700 rounded-2xl p-8 text-white relative overflow-hidden">
                     <div class="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">BEST VALUE</div>
                     <p class="text-sm font-semibold uppercase tracking-wide text-brand-300 mb-3">Monthly Plan</p>
-                    <p class="text-4xl font-bold mb-1">$79<span class="text-lg font-normal text-brand-300"> / mo</span></p>
-                    <p class="text-brand-300 text-sm mb-6">Up to 4 deliveries per month — that's $19.75 each.</p>
+                    <p class="text-4xl font-bold mb-1">${{ number_format($subscriptionPrice, 0) }}<span class="text-lg font-normal text-brand-300"> / mo</span></p>
+                    <p class="text-brand-300 text-sm mb-6">Up to 4 deliveries per month — that's ${{ number_format($subscriptionPrice / 4, 2) }} each.</p>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-center gap-3 text-sm text-brand-100">
                             <svg class="w-5 h-5 text-brand-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>

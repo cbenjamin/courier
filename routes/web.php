@@ -86,4 +86,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/subscriptions', [Admin\SubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::get('/subscriptions/{subscription}', [Admin\SubscriptionController::class, 'show'])->name('subscriptions.show');
     Route::delete('/subscriptions/{subscription}', [Admin\SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+
+    Route::get('/settings', [Admin\SettingsController::class, 'index'])->name('settings.index');
+    Route::patch('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
+    Route::post('/settings/blackouts', [Admin\SettingsController::class, 'storeBlackout'])->name('settings.blackouts.store');
+    Route::delete('/settings/blackouts/{blackout}', [Admin\SettingsController::class, 'destroyBlackout'])->name('settings.blackouts.destroy');
 });

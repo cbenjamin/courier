@@ -23,7 +23,7 @@
                         class="border-2 rounded-xl p-4 transition-colors">
                         <p class="font-medium text-sm text-gray-900">One-time</p>
                         <p class="text-xs text-gray-500 mt-1">Pay per order via card</p>
-                        <p class="text-sm font-semibold text-brand-700 mt-2">$25.00</p>
+                        <p class="text-sm font-semibold text-brand-700 mt-2">${{ number_format($adhocPrice / 100, 2) }}</p>
                     </div>
                 </label>
 
@@ -66,14 +66,24 @@
                     @error('pickup_link') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     <p class="text-xs text-gray-400 mt-1">The confirmation or order-tracking link from your Whole Foods / Amazon order.</p>
                 </div>
-                <div>
+                <div x-data="{
+                    blackouts: {{ $blackoutDates->toJson() }},
+                    blackoutWarning: false,
+                    checkBlackout(val) {
+                        if (!val) { this.blackoutWarning = false; return; }
+                        const date = val.split('T')[0];
+                        this.blackoutWarning = this.blackouts.includes(date);
+                    }
+                }">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Pickup Time</label>
                     <input type="datetime-local" name="pickup_time"
                         value="{{ old('pickup_time') }}"
                         min="{{ now()->addHours(2)->format('Y-m-d\TH:i') }}"
                         required
+                        @change="checkBlackout($el.value)"
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 @error('pickup_time') border-red-400 @enderror">
                     @error('pickup_time') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+                    <p x-show="blackoutWarning" x-cloak class="text-xs text-red-500 mt-1 font-medium">We are not available on this date. Please choose another.</p>
                     <p class="text-xs text-gray-400 mt-1">When should we pick up your order from the store?</p>
                 </div>
             </div>

@@ -94,8 +94,8 @@
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="bg-brand-700 px-8 py-6 text-white">
                 <p class="text-brand-300 text-sm font-medium uppercase tracking-wide mb-1">Monthly Plan</p>
-                <p class="text-4xl font-bold">$79<span class="text-xl font-normal text-brand-300">/mo</span></p>
-                <p class="text-brand-200 mt-1">Up to 4 orders per month</p>
+                <p class="text-4xl font-bold">${{ number_format($subscriptionPrice, 0) }}<span class="text-xl font-normal text-brand-300">/mo</span></p>
+                <p class="text-brand-200 mt-1">Up to 4 deliveries per month</p>
             </div>
             <div class="p-8">
                 <ul class="space-y-3 mb-8">

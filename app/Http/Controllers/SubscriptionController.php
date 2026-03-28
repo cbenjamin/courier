@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Models\Subscription;
 use App\Notifications\SubscriptionActivatedNotification;
 use App\Services\StripeService;
@@ -17,8 +18,9 @@ class SubscriptionController extends Controller
     public function show(): View
     {
         $user = auth()->user()->load('subscription');
+        $subscriptionPrice = Setting::get('subscription_price_cents', 7900) / 100;
 
-        return view('subscription.index', compact('user'));
+        return view('subscription.index', compact('user', 'subscriptionPrice'));
     }
 
     public function store(): RedirectResponse

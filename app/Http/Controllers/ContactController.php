@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -21,7 +22,7 @@ class ContactController extends Controller
         ]);
 
         Mail::send([], [], function ($mail) use ($validated) {
-            $mail->to(config('mail.from.address'))
+            $mail->to(Setting::get('contact_email', config('mail.from.address')))
                 ->replyTo($validated['email'], $validated['name'])
                 ->subject('Contact Form: ' . $validated['name'])
                 ->html(
