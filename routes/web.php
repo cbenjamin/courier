@@ -6,6 +6,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PickupLocationSearchController;
 use App\Http\Controllers\TipController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriptionController;
@@ -58,6 +59,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/pickup-locations/search', PickupLocationSearchController::class)->name('pickup-locations.search');
+
     Route::get('/orders/{order}/tip', [TipController::class, 'show'])->name('orders.tip');
     Route::post('/orders/{order}/tip', [TipController::class, 'store'])->name('orders.tip.store');
 
@@ -90,6 +93,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/subscriptions', [Admin\SubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::get('/subscriptions/{subscription}', [Admin\SubscriptionController::class, 'show'])->name('subscriptions.show');
     Route::delete('/subscriptions/{subscription}', [Admin\SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+
+    Route::get('/pickup-locations', [Admin\PickupLocationController::class, 'index'])->name('pickup-locations.index');
+    Route::post('/pickup-locations', [Admin\PickupLocationController::class, 'store'])->name('pickup-locations.store');
+    Route::get('/pickup-locations/{pickupLocation}/edit', [Admin\PickupLocationController::class, 'edit'])->name('pickup-locations.edit');
+    Route::patch('/pickup-locations/{pickupLocation}', [Admin\PickupLocationController::class, 'update'])->name('pickup-locations.update');
+    Route::delete('/pickup-locations/{pickupLocation}', [Admin\PickupLocationController::class, 'destroy'])->name('pickup-locations.destroy');
 
     Route::get('/settings', [Admin\SettingsController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');

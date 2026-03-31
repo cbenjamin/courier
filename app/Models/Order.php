@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Fillable([
     'user_id',
     'subscription_id',
+    'pickup_location_id',
     'type',
     'status',
     'pickup_link',
@@ -55,6 +56,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function pickupLocation(): BelongsTo
+    {
+        return $this->belongsTo(PickupLocation::class);
     }
 
     public function subscription(): BelongsTo

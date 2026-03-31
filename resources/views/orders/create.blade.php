@@ -53,9 +53,78 @@
 
         <!-- Pickup Details -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <h2 class="font-semibold text-gray-800 mb-1">Whole Foods Pickup</h2>
-            <p class="text-xs text-gray-500 mb-4">Place your order at wholefoodsmarket.com, then paste the pickup confirmation link below.</p>
+            <h2 class="font-semibold text-gray-800 mb-1">Pickup Details</h2>
+            <p class="text-xs text-gray-500 mb-4">Select the store location, place your order with them, then paste the confirmation link below.</p>
             <div class="space-y-4">
+
+                {{-- Pickup Location Typeahead --}}
+                <div x-data="{
+                    query: '{{ old('pickup_location_name', '') }}',
+                    results: [],
+                    selectedId: '{{ old('pickup_location_id', '') }}',
+                    open: false,
+                    loading: false,
+                    async search() {
+                        if (this.query.length < 1) { this.results = []; this.open = false; return; }
+                        this.loading = true;
+                        const res = await fetch('{{ route('pickup-locations.search') }}?q=' + encodeURIComponent(this.query));
+                        this.results = await res.json();
+                        this.open = this.results.length > 0;
+                        this.loading = false;
+                    },
+                    select(loc) {
+                        this.selectedId = loc.id;
+                        this.query = loc.name + ' — ' + loc.city + ', ' + loc.state;
+                        this.open = false;
+                        this.results = [];
+                    },
+                    clear() {
+                        this.selectedId = '';
+                        this.query = '';
+                        this.results = [];
+                        this.open = false;
+                    }
+                }">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pickup Location</label>
+                    <div class="relative">
+                        <input type="text"
+                            x-model="query"
+                            @input.debounce.250ms="search()"
+                            @focus="if (query.length > 0 && results.length > 0) open = true"
+                            @click.outside="open = false"
+                            @keydown.escape="open = false"
+                            placeholder="Type a store name or city…"
+                            autocomplete="off"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 @error('pickup_location_id') border-red-400 @enderror">
+
+                        <input type="hidden" name="pickup_location_id" :value="selectedId">
+
+                        {{-- Clear button --}}
+                        <button type="button" x-show="selectedId || query" @click="clear()"
+                            class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+
+                        {{-- Dropdown --}}
+                        <div x-show="open" x-cloak
+                            class="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-64 overflow-y-auto">
+                            <template x-for="loc in results" :key="loc.id">
+                                <button type="button" @click="select(loc)"
+                                    class="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors">
+                                    <p class="text-sm font-medium text-gray-900" x-text="loc.name"></p>
+                                    <p class="text-xs text-gray-500 mt-0.5"
+                                        x-text="loc.address + ', ' + loc.city + ', ' + loc.state + ' ' + loc.zip"></p>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                    @error('pickup_location_id')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @else
+                        <p class="text-xs text-gray-400 mt-1">Search by store name, city, or both — e.g. "Whole Foods Destin"</p>
+                    @enderror
+                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Order Pickup Link</label>
                     <input type="url" name="pickup_link"
@@ -64,7 +133,7 @@
                         required
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 @error('pickup_link') border-red-400 @enderror">
                     @error('pickup_link') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-                    <p class="text-xs text-gray-400 mt-1">The confirmation or order-tracking link from your Whole Foods / Amazon order.</p>
+                    <p class="text-xs text-gray-400 mt-1">The confirmation or order-tracking link from your grocery store order.</p>
                 </div>
                 <div x-data="{
                     blackouts: {{ $blackoutDates->toJson() }},

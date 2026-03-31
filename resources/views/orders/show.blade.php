@@ -50,8 +50,15 @@
 
     <!-- Pickup Details -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-        <h2 class="font-semibold text-gray-800 mb-4">Whole Foods Pickup</h2>
+        <h2 class="font-semibold text-gray-800 mb-4">Pickup Details</h2>
         <dl class="space-y-3 text-sm">
+            @if($order->pickupLocation)
+                <div>
+                    <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Pickup Location</dt>
+                    <dd class="text-gray-800 font-medium">{{ $order->pickupLocation->name }}</dd>
+                    <dd class="text-gray-500 text-xs mt-0.5">{{ $order->pickupLocation->full_address }}</dd>
+                </div>
+            @endif
             <div>
                 <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Pickup Link</dt>
                 <dd>

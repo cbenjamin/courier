@@ -7,6 +7,7 @@ use App\Models\BlackoutDate;
 use App\Models\Order;
 use App\Models\ServiceZip;
 use App\Models\Setting;
+use App\Models\PickupLocation;
 use App\Notifications\OrderPlacedNotification;
 use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
@@ -89,7 +90,7 @@ class OrderController extends Controller
     {
         abort_if($order->user_id !== auth()->id(), 403);
 
-        $order->load('payment');
+        $order->load('payment', 'pickupLocation');
 
         return view('orders.show', compact('order'));
     }

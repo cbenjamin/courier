@@ -17,6 +17,7 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'type' => ['required', 'in:adhoc,subscription'],
+            'pickup_location_id' => ['required', 'exists:pickup_locations,id'],
             'pickup_link' => ['required', 'url', 'max:2048'],
             'pickup_time' => ['required', 'date', 'after:now'],
             'delivery_address' => ['required', 'string', 'max:255'],
