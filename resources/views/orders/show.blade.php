@@ -78,7 +78,7 @@
     </div>
 
     <!-- Delivery & Payment -->
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Delivery Address</p>
             <p class="text-sm text-gray-800">{{ $order->delivery_address }}</p>
@@ -100,5 +100,30 @@
             @endif
         </div>
     </div>
+
+    @if($order->status === 'delivered')
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+            @if($order->tip_cents)
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Tip</p>
+                        <p class="text-sm font-semibold text-green-700">{{ $order->tip_formatted }}</p>
+                    </div>
+                    <span class="text-sm text-green-600 font-medium">Thank you!</span>
+                </div>
+            @else
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-800">Leave a tip for your courier</p>
+                        <p class="text-xs text-gray-400 mt-0.5">Optional — 100% goes to your courier</p>
+                    </div>
+                    <a href="{{ route('orders.tip', $order) }}"
+                        class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap">
+                        Add a Tip
+                    </a>
+                </div>
+            @endif
+        </div>
+    @endif
 </div>
 @endsection

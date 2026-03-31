@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlackoutDate;
+use App\Models\ServiceZip;
 use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,8 +21,9 @@ class SettingsController extends Controller
         ];
 
         $blackouts = BlackoutDate::orderBy('date')->get();
+        $serviceZips = ServiceZip::orderBy('zip')->get();
 
-        return view('admin.settings.index', compact('settings', 'blackouts'));
+        return view('admin.settings.index', compact('settings', 'blackouts', 'serviceZips'));
     }
 
     public function update(Request $request): RedirectResponse
@@ -37,6 +39,25 @@ class SettingsController extends Controller
         Setting::set('contact_email', $validated['contact_email']);
 
         return back()->with('success', 'Settings saved.');
+    }
+
+    public function storeServiceZip(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'zip'   => ['required', 'string', 'max:10', 'unique:service_zips,zip'],
+            'label' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        ServiceZip::create($validated);
+
+        return back()->with('success', 'ZIP code added to service area.');
+    }
+
+    public function destroyServiceZip(ServiceZip $serviceZip): RedirectResponse
+    {
+        $serviceZip->delete();
+
+        return back()->with('success', 'ZIP code removed from service area.');
     }
 
     public function storeBlackout(Request $request): RedirectResponse

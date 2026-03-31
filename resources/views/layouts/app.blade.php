@@ -25,6 +25,7 @@
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 hover:text-gray-900">Dashboard</a>
                         <a href="{{ route('orders.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Deliveries</a>
+                        <a href="{{ route('subscribe.show') }}" class="text-sm text-gray-600 hover:text-gray-900">Subscription</a>
                         <a href="{{ route('profile.edit') }}" class="text-sm text-gray-600 hover:text-gray-900">Profile</a>
                         <a href="{{ route('contact.show') }}" class="text-sm text-gray-600 hover:text-gray-900">Contact</a>
                         @if(auth()->user()->is_admin)
@@ -59,6 +60,7 @@
             @auth
                 <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
                 <a href="{{ route('orders.index') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Deliveries</a>
+                <a href="{{ route('subscribe.show') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Subscription</a>
                 <a href="{{ route('profile.edit') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Profile</a>
                 <a href="{{ route('contact.show') }}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Contact</a>
                 @if(auth()->user()->is_admin)

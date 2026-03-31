@@ -90,7 +90,14 @@
         </div>
 
         <!-- Delivery Address -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6"
+            x-data="{
+                serviceZips: {{ $serviceZips->toJson() }},
+                zip: '{{ old('delivery_zip', $user->profile?->zip) }}',
+                get zipOutOfArea() {
+                    return this.serviceZips.length > 0 && this.zip.length >= 5 && !this.serviceZips.includes(this.zip.trim());
+                }
+            }">
             <h2 class="font-semibold text-gray-800 mb-4">Delivery Address</h2>
             <div class="space-y-4">
                 <div>
@@ -119,9 +126,15 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">ZIP</label>
                         <input type="text" name="delivery_zip"
-                            value="{{ old('delivery_zip', $user->profile?->zip) }}"
-                            required
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            x-model="zip"
+                            required maxlength="10"
+                            :class="zipOutOfArea ? 'border-red-400' : ''"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 @error('delivery_zip') border-red-400 @enderror">
+                        <p x-show="zipOutOfArea" x-cloak class="text-xs text-red-500 mt-1 font-medium">
+                            We don't currently deliver to this ZIP code.
+                            <a href="{{ route('contact.show') }}" class="underline">Contact us</a> to request coverage.
+                        </p>
+                        @error('delivery_zip') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>

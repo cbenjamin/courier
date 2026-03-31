@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Subscription;
-use App\Notifications\OrderConfirmedNotification;
+use App\Notifications\OrderPlacedNotification;
 use App\Services\StripeService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -40,6 +40,13 @@ class WebhookController extends Controller
 
     private function handlePaymentIntentSucceeded(\Stripe\PaymentIntent $intent): void
     {
+        // Handle tip payments first
+        $tipOrder = Order::where('tip_stripe_payment_intent_id', $intent->id)->first();
+        if ($tipOrder) {
+            $tipOrder->update(['tip_cents' => $intent->amount]);
+            return;
+        }
+
         $order = Order::where('stripe_payment_intent_id', $intent->id)->first();
 
         if (! $order || $order->status === Order::STATUS_CONFIRMED) {
@@ -58,7 +65,7 @@ class WebhookController extends Controller
             ]);
         }
 
-        $order->user->notify(new OrderConfirmedNotification($order));
+        $order->user->notify(new OrderPlacedNotification($order));
     }
 
     private function handleInvoicePaid(\Stripe\Invoice $invoice): void

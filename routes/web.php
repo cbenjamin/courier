@@ -6,6 +6,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TipController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\WebhookController;
@@ -57,9 +58,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/tip', [TipController::class, 'show'])->name('orders.tip');
+    Route::post('/orders/{order}/tip', [TipController::class, 'store'])->name('orders.tip.store');
 
     Route::get('/subscribe', [SubscriptionController::class, 'show'])->name('subscribe.show');
     Route::post('/subscribe', [SubscriptionController::class, 'store'])->name('subscribe.store');
+    Route::post('/subscribe/resume', [SubscriptionController::class, 'resume'])->name('subscribe.resume');
     Route::delete('/subscribe', [SubscriptionController::class, 'cancel'])->name('subscribe.cancel');
     Route::get('/subscribe/complete', [SubscriptionController::class, 'complete'])->name('subscribe.complete');
 
@@ -91,4 +95,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
     Route::post('/settings/blackouts', [Admin\SettingsController::class, 'storeBlackout'])->name('settings.blackouts.store');
     Route::delete('/settings/blackouts/{blackout}', [Admin\SettingsController::class, 'destroyBlackout'])->name('settings.blackouts.destroy');
+    Route::post('/settings/service-zips', [Admin\SettingsController::class, 'storeServiceZip'])->name('settings.service-zips.store');
+    Route::delete('/settings/service-zips/{serviceZip}', [Admin\SettingsController::class, 'destroyServiceZip'])->name('settings.service-zips.destroy');
 });

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Notifications\OrderStatusUpdatedNotification;
+use App\Notifications\OrderCancelledNotification;
+use App\Notifications\OrderDeliveredNotification;
+use App\Notifications\OrderPickedUpNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -48,7 +50,16 @@ class OrderController extends Controller
             $order->subscription->decrement('orders_used');
         }
 
-        $order->user->notify(new OrderStatusUpdatedNotification($order));
+        $notification = match ($request->status) {
+            'picked_up' => new OrderPickedUpNotification($order),
+            'delivered' => new OrderDeliveredNotification($order),
+            'cancelled' => new OrderCancelledNotification($order),
+            default     => null,
+        };
+
+        if ($notification) {
+            $order->user->notify($notification);
+        }
 
         return redirect()->route('admin.orders.show', $order)->with('success', 'Order status updated.');
     }

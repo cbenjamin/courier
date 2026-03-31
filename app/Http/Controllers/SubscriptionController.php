@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Models\Subscription;
 use App\Notifications\SubscriptionActivatedNotification;
+use App\Notifications\SubscriptionCancelledNotification;
 use App\Services\StripeService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -47,6 +48,21 @@ class SubscriptionController extends Controller
         return redirect($session->url);
     }
 
+    public function resume(): RedirectResponse
+    {
+        $user         = auth()->user()->load('subscription');
+        $subscription = $user->subscription;
+
+        abort_if($subscription?->status !== Subscription::STATUS_CANCELLING, 403, 'No cancellation to undo.');
+
+        $this->stripe->resumeSubscription($subscription->stripe_subscription_id);
+
+        $subscription->update(['status' => Subscription::STATUS_ACTIVE]);
+
+        return redirect()->route('subscribe.show')
+            ->with('success', 'Your subscription has been reactivated and will renew on ' . $subscription->period_end->format('M j, Y') . '.');
+    }
+
     public function cancel(): RedirectResponse
     {
         $user = auth()->user()->load('subscription');
@@ -57,6 +73,8 @@ class SubscriptionController extends Controller
         $this->stripe->cancelSubscription($subscription->stripe_subscription_id);
 
         $subscription->update(['status' => Subscription::STATUS_CANCELLING]);
+
+        $user->notify(new SubscriptionCancelledNotification($subscription));
 
         return redirect()->route('subscribe.show')
             ->with('success', 'Your subscription has been cancelled and will remain active until ' . $subscription->period_end->format('M j, Y') . '.');

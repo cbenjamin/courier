@@ -70,6 +70,29 @@ class StripeService
         ]);
     }
 
+    public function resumeSubscription(string $stripeSubscriptionId): Subscription
+    {
+        return $this->client->subscriptions->update($stripeSubscriptionId, [
+            'cancel_at_period_end' => false,
+        ]);
+    }
+
+    public function createTipPaymentIntent(int $amountCents, string $customerId, int $orderId): PaymentIntent
+    {
+        return $this->client->paymentIntents->create([
+            'amount'   => $amountCents,
+            'currency' => 'usd',
+            'customer' => $customerId,
+            'automatic_payment_methods' => ['enabled' => true],
+            'metadata' => ['type' => 'tip', 'order_id' => $orderId],
+        ]);
+    }
+
+    public function getPaymentIntent(string $id): PaymentIntent
+    {
+        return $this->client->paymentIntents->retrieve($id);
+    }
+
     public function constructWebhookEvent(string $payload, string $signature): \Stripe\Event
     {
         return \Stripe\Webhook::constructEvent(

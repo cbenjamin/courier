@@ -82,10 +82,40 @@
                     </div>
                 </div>
             @else
-                <div class="border-t border-gray-100 pt-4">
-                    <p class="text-sm text-orange-500">
-                        Your subscription is cancelled and will remain active until {{ $user->subscription->period_end?->format('M j, Y') }}.
+                <div x-data="{ open: false }" class="border-t border-gray-100 pt-4">
+                    <p class="text-sm text-orange-500 mb-3">
+                        Your subscription is set to cancel on {{ $user->subscription->period_end?->format('M j, Y') }}. You'll keep full access until then.
                     </p>
+                    <button @click="open = true"
+                        class="text-sm font-medium text-brand-600 hover:text-brand-800 transition-colors">
+                        Reactivate subscription →
+                    </button>
+
+                    <!-- Confirmation modal -->
+                    <div x-show="open" x-cloak
+                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+                        @keydown.escape.window="open = false">
+                        <div class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4" @click.stop>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Reactivate subscription?</h3>
+                            <p class="text-sm text-gray-500 mb-6">
+                                Your subscription will continue as normal and renew on
+                                <strong>{{ $user->subscription->period_end?->format('M j, Y') }}</strong>.
+                            </p>
+                            <div class="flex gap-3">
+                                <button @click="open = false"
+                                    class="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg text-sm transition-colors">
+                                    Never mind
+                                </button>
+                                <form method="POST" action="{{ route('subscribe.resume') }}" class="flex-1">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full bg-brand-600 hover:bg-brand-700 text-white font-medium py-2 rounded-lg text-sm transition-colors">
+                                        Yes, reactivate
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
         </div>

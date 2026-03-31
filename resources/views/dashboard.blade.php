@@ -17,12 +17,14 @@
             <p class="text-sm text-gray-500 mt-1">
                 {{ $user->subscription->orders_used }} / 4 deliveries used this month
             </p>
-            @if($user->subscription->period_end)
-                <p class="text-xs text-gray-400 mt-1">Resets {{ $user->subscription->period_end->format('M j') }}</p>
-            @endif
             @if($user->subscription->status === 'cancelling')
-                <p class="text-xs text-orange-500 mt-1">Cancels at period end</p>
+                <p class="text-xs text-orange-500 mt-1">Cancels {{ $user->subscription->period_end?->format('M j') }}</p>
+            @elseif($user->subscription->period_end)
+                <p class="text-xs text-gray-400 mt-1">Renews {{ $user->subscription->period_end->format('M j') }}</p>
             @endif
+            <a href="{{ route('subscribe.show') }}" class="text-sm text-brand-600 hover:underline mt-2 inline-block">
+                Manage subscription →
+            </a>
         @else
             <p class="text-xl font-semibold text-gray-400">No Plan</p>
             <a href="{{ route('subscribe.show') }}" class="text-sm text-brand-600 hover:underline mt-1 inline-block">

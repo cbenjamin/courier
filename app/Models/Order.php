@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'delivery_zip',
     'stripe_payment_intent_id',
     'amount_cents',
+    'tip_cents',
+    'tip_stripe_payment_intent_id',
     'notes',
 ])]
 class Order extends Model
@@ -46,6 +48,7 @@ class Order extends Model
         return [
             'pickup_time' => 'datetime',
             'amount_cents' => 'integer',
+            'tip_cents' => 'integer',
         ];
     }
 
@@ -67,5 +70,10 @@ class Order extends Model
     public function getAmountFormattedAttribute(): string
     {
         return $this->amount_cents ? '$'.number_format($this->amount_cents / 100, 2) : 'N/A';
+    }
+
+    public function getTipFormattedAttribute(): string
+    {
+        return $this->tip_cents ? '$'.number_format($this->tip_cents / 100, 2) : '$0.00';
     }
 }

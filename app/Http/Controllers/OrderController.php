@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\BlackoutDate;
 use App\Models\Order;
+use App\Models\ServiceZip;
 use App\Models\Setting;
+use App\Notifications\OrderPlacedNotification;
 use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -26,8 +28,9 @@ class OrderController extends Controller
         $user = auth()->user()->load('profile', 'subscription');
         $adhocPrice = Setting::get('adhoc_price_cents', 2500);
         $blackoutDates = BlackoutDate::orderBy('date')->pluck('date')->map->toDateString();
+        $serviceZips = ServiceZip::orderBy('zip')->pluck('zip');
 
-        return view('orders.create', compact('user', 'adhocPrice', 'blackoutDates'));
+        return view('orders.create', compact('user', 'adhocPrice', 'blackoutDates', 'serviceZips'));
     }
 
     public function store(StoreOrderRequest $request): mixed
@@ -53,6 +56,8 @@ class OrderController extends Controller
             ]);
 
             $subscription->increment('orders_used');
+
+            $user->notify(new OrderPlacedNotification($order));
 
             return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
         }
