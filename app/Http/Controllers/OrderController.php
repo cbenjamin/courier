@@ -8,8 +8,10 @@ use App\Models\Order;
 use App\Models\ServiceZip;
 use App\Models\Setting;
 use App\Models\PickupLocation;
+use App\Notifications\CourierNewOrderAlert;
 use App\Notifications\OrderPlacedNotification;
 use App\Services\StripeService;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -59,6 +61,12 @@ class OrderController extends Controller
             $subscription->increment('orders_used');
 
             $user->notify(new OrderPlacedNotification($order));
+
+            $order->load('pickupLocation');
+            $courierPhone = Setting::get('courier_phone');
+            if ($courierPhone) {
+                Notification::route('sms', $courierPhone)->notify(new CourierNewOrderAlert($order));
+            }
 
             return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully!');
         }

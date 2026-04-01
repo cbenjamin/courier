@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\SmsChannel;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,7 +17,14 @@ class OrderPickedUpNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', SmsChannel::class];
+    }
+
+    public function toSms(object $notifiable): string
+    {
+        $address = "{$this->order->delivery_address}, {$this->order->delivery_city}";
+
+        return "Wiregrass Courier: Your order has been picked up and is on the way to {$address}.";
     }
 
     public function toMail(object $notifiable): MailMessage

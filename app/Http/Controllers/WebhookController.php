@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Setting;
 use App\Models\Subscription;
+use App\Notifications\CourierNewOrderAlert;
 use App\Notifications\OrderPlacedNotification;
 use App\Services\StripeService;
+use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -66,6 +69,12 @@ class WebhookController extends Controller
         }
 
         $order->user->notify(new OrderPlacedNotification($order));
+
+        $order->load('pickupLocation');
+        $courierPhone = Setting::get('courier_phone');
+        if ($courierPhone) {
+            Notification::route('sms', $courierPhone)->notify(new CourierNewOrderAlert($order));
+        }
     }
 
     private function handleInvoicePaid(\Stripe\Invoice $invoice): void

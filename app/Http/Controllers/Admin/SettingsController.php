@@ -18,6 +18,7 @@ class SettingsController extends Controller
             'adhoc_price_cents'        => Setting::get('adhoc_price_cents', 2500),
             'subscription_price_cents' => Setting::get('subscription_price_cents', 7900),
             'contact_email'            => Setting::get('contact_email', config('mail.from.address')),
+            'courier_phone'            => Setting::get('courier_phone', ''),
         ];
 
         $blackouts = BlackoutDate::orderBy('date')->get();
@@ -39,6 +40,17 @@ class SettingsController extends Controller
         Setting::set('contact_email', $validated['contact_email']);
 
         return back()->with('success', 'Settings saved.');
+    }
+
+    public function updateCourierSettings(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'courier_phone' => ['nullable', 'string', 'max:20'],
+        ]);
+
+        Setting::set('courier_phone', $validated['courier_phone'] ?? '');
+
+        return back()->with('success', 'Courier settings saved.');
     }
 
     public function storeServiceZip(Request $request): RedirectResponse

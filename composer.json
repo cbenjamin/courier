@@ -14,7 +14,8 @@
         "laravel/tinker": "^3.0",
         "stripe/stripe-php": "*",
         "symfony/http-client": "*",
-        "symfony/mailgun-mailer": "*"
+        "symfony/mailgun-mailer": "*",
+        "twilio/sdk": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

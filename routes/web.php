@@ -102,6 +102,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/settings', [Admin\SettingsController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
+    Route::patch('/settings/courier', [Admin\SettingsController::class, 'updateCourierSettings'])->name('settings.update-courier');
     Route::post('/settings/blackouts', [Admin\SettingsController::class, 'storeBlackout'])->name('settings.blackouts.store');
     Route::delete('/settings/blackouts/{blackout}', [Admin\SettingsController::class, 'destroyBlackout'])->name('settings.blackouts.destroy');
     Route::post('/settings/service-zips', [Admin\SettingsController::class, 'storeServiceZip'])->name('settings.service-zips.store');

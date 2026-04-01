@@ -42,4 +42,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Subscription::class)->latestOfMany();
     }
+
+    public function routeNotificationForSms(): ?string
+    {
+        return $this->profile?->phone;
+    }
 }
