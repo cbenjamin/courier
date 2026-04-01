@@ -12,19 +12,43 @@ use Illuminate\View\View;
 
 class SettingsController extends Controller
 {
-    public function index(): View
+    public function index(): RedirectResponse
+    {
+        return redirect()->route('admin.settings.general');
+    }
+
+    public function showGeneral(): View
     {
         $settings = [
             'adhoc_price_cents'        => Setting::get('adhoc_price_cents', 2500),
             'subscription_price_cents' => Setting::get('subscription_price_cents', 7900),
             'contact_email'            => Setting::get('contact_email', config('mail.from.address')),
-            'courier_phone'            => Setting::get('courier_phone', ''),
         ];
 
-        $blackouts = BlackoutDate::orderBy('date')->get();
+        return view('admin.settings.general', compact('settings'));
+    }
+
+    public function showNotifications(): View
+    {
+        $settings = [
+            'courier_phone' => Setting::get('courier_phone', ''),
+        ];
+
+        return view('admin.settings.notifications', compact('settings'));
+    }
+
+    public function showServiceArea(): View
+    {
         $serviceZips = ServiceZip::orderBy('zip')->get();
 
-        return view('admin.settings.index', compact('settings', 'blackouts', 'serviceZips'));
+        return view('admin.settings.service-area', compact('serviceZips'));
+    }
+
+    public function showBlackouts(): View
+    {
+        $blackouts = BlackoutDate::orderBy('date')->get();
+
+        return view('admin.settings.blackouts', compact('blackouts'));
     }
 
     public function update(Request $request): RedirectResponse

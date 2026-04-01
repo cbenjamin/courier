@@ -101,10 +101,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/pickup-locations/{pickupLocation}', [Admin\PickupLocationController::class, 'destroy'])->name('pickup-locations.destroy');
 
     Route::get('/settings', [Admin\SettingsController::class, 'index'])->name('settings.index');
-    Route::patch('/settings', [Admin\SettingsController::class, 'update'])->name('settings.update');
-    Route::patch('/settings/courier', [Admin\SettingsController::class, 'updateCourierSettings'])->name('settings.update-courier');
+    Route::get('/settings/general', [Admin\SettingsController::class, 'showGeneral'])->name('settings.general');
+    Route::get('/settings/notifications', [Admin\SettingsController::class, 'showNotifications'])->name('settings.notifications');
+    Route::get('/settings/service-area', [Admin\SettingsController::class, 'showServiceArea'])->name('settings.service-area');
+    Route::get('/settings/blackouts', [Admin\SettingsController::class, 'showBlackouts'])->name('settings.blackouts');
+    Route::patch('/settings/general', [Admin\SettingsController::class, 'update'])->name('settings.update');
+    Route::patch('/settings/notifications', [Admin\SettingsController::class, 'updateCourierSettings'])->name('settings.update-courier');
+    Route::post('/settings/service-area', [Admin\SettingsController::class, 'storeServiceZip'])->name('settings.service-zips.store');
+    Route::delete('/settings/service-area/{serviceZip}', [Admin\SettingsController::class, 'destroyServiceZip'])->name('settings.service-zips.destroy');
     Route::post('/settings/blackouts', [Admin\SettingsController::class, 'storeBlackout'])->name('settings.blackouts.store');
     Route::delete('/settings/blackouts/{blackout}', [Admin\SettingsController::class, 'destroyBlackout'])->name('settings.blackouts.destroy');
-    Route::post('/settings/service-zips', [Admin\SettingsController::class, 'storeServiceZip'])->name('settings.service-zips.store');
-    Route::delete('/settings/service-zips/{serviceZip}', [Admin\SettingsController::class, 'destroyServiceZip'])->name('settings.service-zips.destroy');
 });
