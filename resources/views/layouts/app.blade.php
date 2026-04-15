@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Wiregrass Courier') }} - @yield('title', 'Your Whole Foods Courier')</title>
+    <title>{{ config('app.name', 'EverRoots') }} - @yield('title', 'Your Whole Foods Courier')</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -17,7 +17,7 @@
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
-                    Wiregrass Courier
+                    EverRoots
                 </a>
 
                 <!-- Desktop nav -->
@@ -99,7 +99,7 @@
     </main>
 
     <footer class="border-t border-gray-200 mt-16 py-8 text-center text-sm text-gray-500">
-        &copy; {{ date('Y') }} Wiregrass Courier &mdash; Serving rural southern Alabama
+        &copy; {{ date('Y') }} EverRoots &mdash; Serving rural southern Alabama
     </footer>
 </body>
 </html>
