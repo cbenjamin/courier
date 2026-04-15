@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\OrderStatusUpdated;
 use App\Models\Order;
 use App\Notifications\OrderCancelledNotification;
 use App\Notifications\OrderDeliveredNotification;
@@ -35,6 +36,8 @@ class OrderStatusService
         if ($notification) {
             $order->user->notify($notification);
         }
+
+        event(new OrderStatusUpdated($order));
 
         return $order->fresh();
     }

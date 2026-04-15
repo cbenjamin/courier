@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\ExpoPushChannel;
 use App\Channels\SmsChannel;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
@@ -17,7 +18,19 @@ class OrderDeliveredNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['mail', SmsChannel::class];
+        return ['mail', SmsChannel::class, ExpoPushChannel::class];
+    }
+
+    public function toExpoPush(object $notifiable): array
+    {
+        return [
+            'title' => 'Order Delivered!',
+            'body'  => 'Your order has been delivered. Thank you for choosing Wiregrass Courier!',
+            'data'  => [
+                'order_id' => $this->order->id,
+                'screen'   => 'order-detail',
+            ],
+        ];
     }
 
     public function toSms(object $notifiable): string

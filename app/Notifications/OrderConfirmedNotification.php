@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\ExpoPushChannel;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,7 +17,19 @@ class OrderConfirmedNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', ExpoPushChannel::class];
+    }
+
+    public function toExpoPush(object $notifiable): array
+    {
+        return [
+            'title' => 'Order Confirmed!',
+            'body'  => 'Your courier order has been confirmed. We\'ll keep you updated.',
+            'data'  => [
+                'order_id' => $this->order->id,
+                'screen'   => 'order-detail',
+            ],
+        ];
     }
 
     public function toMail(object $notifiable): MailMessage

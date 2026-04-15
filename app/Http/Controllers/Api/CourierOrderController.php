@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CourierLocationUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
@@ -43,7 +44,13 @@ class CourierOrderController extends Controller
             'longitude' => ['required', 'numeric', 'between:-180,180'],
         ]);
 
-        // Broadcasting wired in Phase 2 — stub ready
+        event(new CourierLocationUpdated(
+            $order->id,
+            $request->latitude,
+            $request->longitude,
+            now()->toIso8601String(),
+        ));
+
         return response()->json(['ok' => true]);
     }
 }
