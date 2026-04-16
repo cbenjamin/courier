@@ -54,7 +54,11 @@
 
     <!-- Delivery Map -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-4">
-        <div id="order-map" style="height: 260px;"></div>
+        <div id="order-map" style="height: 260px; position: relative;">
+            <div id="order-map-status" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#f9fafb;z-index:1000;">
+                <span class="text-sm text-gray-400">Loading map…</span>
+            </div>
+        </div>
         <div class="px-4 py-2 flex items-center gap-5 text-xs text-gray-500 border-t border-gray-100">
             @if($order->pickupLocation)
                 <span class="flex items-center gap-1.5">
@@ -160,6 +164,15 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
 <script>
 (async function () {
+    const statusEl = document.getElementById('order-map-status');
+    function setStatus(msg) { if (statusEl) statusEl.innerHTML = '<span class="text-sm text-gray-400">' + msg + '</span>'; }
+    function hideStatus() { if (statusEl) statusEl.style.display = 'none'; }
+
+    if (typeof L === 'undefined') {
+        setStatus('Map unavailable');
+        return;
+    }
+
     @php
         $pickupAddr = $order->pickupLocation
             ? "{$order->pickupLocation->address}, {$order->pickupLocation->city}, {$order->pickupLocation->state} {$order->pickupLocation->zip}"
@@ -198,7 +211,12 @@
         geocode(deliveryAddress),
     ]);
 
-    if (!delivery) return;
+    if (!delivery) {
+        setStatus('Map unavailable');
+        return;
+    }
+
+    hideStatus();
 
     const map = L.map('order-map', { zoomControl: true });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
