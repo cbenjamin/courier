@@ -183,6 +183,9 @@
     const pickupAddress  = @json($pickupAddr);
     const deliveryAddress = @json($deliveryAddr);
 
+    console.log('[map] pickupAddress:', pickupAddress);
+    console.log('[map] deliveryAddress:', deliveryAddress);
+
     async function geocode(address) {
         try {
             const res = await fetch(
@@ -210,6 +213,8 @@
         pickupAddress ? geocode(pickupAddress) : Promise.resolve(null),
         geocode(deliveryAddress),
     ]);
+
+    console.log('[map] pickup coords:', pickup, '| delivery coords:', delivery);
 
     if (!delivery) {
         setStatus('Map unavailable');
