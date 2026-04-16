@@ -4,6 +4,15 @@
 
 @push('head')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+.route-animated {
+    stroke-dasharray: 8 14;
+    animation: routeMarch 1.2s linear infinite;
+}
+@keyframes routeMarch {
+    to { stroke-dashoffset: -22; }
+}
+</style>
 @endpush
 
 @section('content')
@@ -196,6 +205,28 @@
         return null;
     }
 
+    function bezierPoints(p1, p2, steps) {
+        steps = steps || 60;
+        const midLat = (p1[0] + p2[0]) / 2;
+        const midLng = (p1[1] + p2[1]) / 2;
+        const dLat = p2[0] - p1[0];
+        const dLng = p2[1] - p1[1];
+        const dist = Math.sqrt(dLat * dLat + dLng * dLng);
+        if (dist === 0) return [p1, p2];
+        const offset = dist * 0.3;
+        const ctrlLat = midLat - dLng * (offset / dist);
+        const ctrlLng = midLng + dLat * (offset / dist);
+        const pts = [];
+        for (let i = 0; i <= steps; i++) {
+            const t = i / steps, mt = 1 - t;
+            pts.push([
+                mt * mt * p1[0] + 2 * mt * t * ctrlLat + t * t * p2[0],
+                mt * mt * p1[1] + 2 * mt * t * ctrlLng + t * t * p2[1],
+            ]);
+        }
+        return pts;
+    }
+
     function dotIcon(color) {
         return L.divIcon({
             className: '',
@@ -237,6 +268,15 @@
         .addTo(map)
         .bindPopup('<strong>Delivery</strong><br>{{ addslashes($deliveryAddr) }}');
     points.push(delivery);
+
+    if (pickup) {
+        L.polyline(bezierPoints(pickup, delivery), {
+            color: '#6366f1',
+            weight: 2.5,
+            opacity: 0.85,
+            className: 'route-animated',
+        }).addTo(map);
+    }
 
     if (points.length === 1) {
         map.setView(points[0], 14);
