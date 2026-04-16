@@ -24,7 +24,7 @@ class OrderController extends Controller
 
     public function show(Request $request, Order $order): OrderResource|JsonResponse
     {
-        if ($order->user_id !== $request->user()->id) {
+        if ($order->user_id !== $request->user()->id && ! $request->user()->is_admin) {
             return response()->json(['message' => 'Forbidden.'], 403);
         }
 

@@ -15,12 +15,21 @@ class CourierOrderController extends Controller
 {
     public function __construct(private OrderStatusService $statusService) {}
 
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $orders = Order::with('user', 'pickupLocation')
-            ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_CONFIRMED, Order::STATUS_PICKED_UP])
-            ->orderBy('pickup_time')
-            ->get();
+        $history = $request->boolean('history', false);
+
+        if ($history) {
+            $orders = Order::with('user', 'pickupLocation')
+                ->whereIn('status', [Order::STATUS_DELIVERED, Order::STATUS_CANCELLED])
+                ->orderByDesc('pickup_time')
+                ->get();
+        } else {
+            $orders = Order::with('user', 'pickupLocation')
+                ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_CONFIRMED, Order::STATUS_PICKED_UP])
+                ->orderBy('pickup_time')
+                ->get();
+        }
 
         return OrderResource::collection($orders);
     }
