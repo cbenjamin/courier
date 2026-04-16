@@ -18,7 +18,7 @@ class CourierOrderController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $orders = Order::with('user', 'pickupLocation')
-            ->whereIn('status', [Order::STATUS_CONFIRMED, Order::STATUS_PICKED_UP])
+            ->whereIn('status', [Order::STATUS_PENDING, Order::STATUS_CONFIRMED, Order::STATUS_PICKED_UP])
             ->orderBy('pickup_time')
             ->get();
 
