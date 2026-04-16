@@ -2,6 +2,10 @@
 
 @section('title', 'Delivery #' . $order->id)
 
+@push('head')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+@endpush
+
 @section('content')
 <div class="max-w-2xl mx-auto">
     <div class="mb-6">
@@ -45,6 +49,23 @@
                     @endif
                 </div>
             @endforeach
+        </div>
+    </div>
+
+    <!-- Delivery Map -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-4">
+        <div id="order-map" style="height: 260px;"></div>
+        <div class="px-4 py-2 flex items-center gap-5 text-xs text-gray-500 border-t border-gray-100">
+            @if($order->pickupLocation)
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-500 shrink-0"></span>
+                    Pickup: {{ $order->pickupLocation->name }}
+                </span>
+            @endif
+            <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0"></span>
+                Delivery
+            </span>
         </div>
     </div>
 
@@ -134,3 +155,76 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
+<script>
+(async function () {
+    @php
+        $pickupAddr = $order->pickupLocation
+            ? "{$order->pickupLocation->address}, {$order->pickupLocation->city}, {$order->pickupLocation->state} {$order->pickupLocation->zip}"
+            : null;
+        $deliveryAddr = "{$order->delivery_address}, {$order->delivery_city}, {$order->delivery_state} {$order->delivery_zip}";
+    @endphp
+
+    const pickupAddress  = @json($pickupAddr);
+    const deliveryAddress = @json($deliveryAddr);
+
+    async function geocode(address) {
+        try {
+            const res = await fetch(
+                'https://nominatim.openstreetmap.org/search?' +
+                new URLSearchParams({ q: address, format: 'json', limit: 1, countrycodes: 'us' }),
+                { headers: { 'Accept-Language': 'en' } }
+            );
+            const data = await res.json();
+            if (data.length) return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+        } catch {}
+        return null;
+    }
+
+    function dotIcon(color) {
+        return L.divIcon({
+            className: '',
+            html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,
+            iconSize: [14, 14],
+            iconAnchor: [7, 7],
+            popupAnchor: [0, -10],
+        });
+    }
+
+    const [pickup, delivery] = await Promise.all([
+        pickupAddress ? geocode(pickupAddress) : Promise.resolve(null),
+        geocode(deliveryAddress),
+    ]);
+
+    if (!delivery) return;
+
+    const map = L.map('order-map', { zoomControl: true });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18,
+    }).addTo(map);
+
+    const points = [];
+
+    if (pickup) {
+        L.marker(pickup, { icon: dotIcon('#22c55e') })
+            .addTo(map)
+            .bindPopup('<strong>Pickup</strong><br>{{ addslashes($order->pickupLocation?->name ?? '') }}');
+        points.push(pickup);
+    }
+
+    L.marker(delivery, { icon: dotIcon('#3b82f6') })
+        .addTo(map)
+        .bindPopup('<strong>Delivery</strong><br>{{ addslashes($deliveryAddr) }}');
+    points.push(delivery);
+
+    if (points.length === 1) {
+        map.setView(points[0], 14);
+    } else {
+        map.fitBounds(points, { padding: [36, 36] });
+    }
+})();
+</script>
+@endpush

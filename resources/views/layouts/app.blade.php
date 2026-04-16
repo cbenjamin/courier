@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased" x-data>
     <nav class="bg-white shadow-sm border-b border-gray-200" x-data="{ open: false }">
@@ -101,5 +102,6 @@
     <footer class="border-t border-gray-200 mt-16 py-8 text-center text-sm text-gray-500">
         &copy; {{ date('Y') }} EverRoots &mdash; Serving rural southern Alabama
     </footer>
+    @stack('scripts')
 </body>
 </html>
