@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\OrderStatusUpdated;
 use App\Models\Order;
 use App\Notifications\OrderCancelledNotification;
+use App\Notifications\OrderConfirmedNotification;
 use App\Notifications\OrderDeliveredNotification;
 use App\Notifications\OrderPickedUpNotification;
 
@@ -27,6 +28,7 @@ class OrderStatusService
         }
 
         $notification = match ($newStatus) {
+            Order::STATUS_CONFIRMED  => new OrderConfirmedNotification($order),
             Order::STATUS_PICKED_UP  => new OrderPickedUpNotification($order),
             Order::STATUS_DELIVERED  => new OrderDeliveredNotification($order),
             Order::STATUS_CANCELLED  => new OrderCancelledNotification($order),
