@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
+use App\Rules\Turnstile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -15,11 +16,16 @@ class ContactController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             'name'    => ['required', 'string', 'max:100'],
             'email'   => ['required', 'email', 'max:255'],
             'message' => ['required', 'string', 'max:2000'],
-        ]);
+        ];
+        if (config('services.turnstile.secret_key')) {
+            $rules['cf-turnstile-response'] = ['required', new Turnstile()];
+        }
+        $validated = $request->validate($rules);
+        unset($validated['cf-turnstile-response']);
 
         Mail::send([], [], function ($mail) use ($validated) {
             $mail->to(Setting::get('contact_email', config('mail.from.address')))
