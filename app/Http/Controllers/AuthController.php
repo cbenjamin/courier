@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Rules\Turnstile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +18,15 @@ class AuthController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
+        $rules = [
+            'email'    => ['required', 'email'],
             'password' => ['required'],
-        ]);
+        ];
+        if (config('services.turnstile.secret_key')) {
+            $rules['cf-turnstile-response'] = ['required', new Turnstile()];
+        }
+        $credentials = $request->validate($rules);
+        unset($credentials['cf-turnstile-response']);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
@@ -40,11 +46,16 @@ class AuthController extends Controller
 
     public function register(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        $rules = [
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        ];
+        if (config('services.turnstile.secret_key')) {
+            $rules['cf-turnstile-response'] = ['required', new Turnstile()];
+        }
+        $validated = $request->validate($rules);
+        unset($validated['cf-turnstile-response']);
 
         $user = User::create($validated);
         $user->profile()->create([]);

@@ -103,5 +103,8 @@
         &copy; {{ date('Y') }} EverRoots &mdash; Serving rural southern Alabama
     </footer>
     @stack('scripts')
+    @if(config('services.turnstile.site_key'))
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    @endif
 </body>
 </html>
